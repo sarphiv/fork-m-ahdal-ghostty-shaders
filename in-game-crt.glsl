@@ -2,7 +2,7 @@
 // Author: sarphiv
 // License: CC BY-NC-SA 4.0
 // Description:
-//   Shader for ghostty that is focussed on being usable while looking like a stylized CRT terminal in a modern video game.
+//   Shader for ghostty that is focused on being usable while looking like a stylized CRT terminal in a modern video game.
 //   I know a tiny bit about shaders, and nothing about GLSL,
 //   so this is a Frakenstein's monster combination of other shaders together with a lot of surgery.
 //   On the bright side, i've cleaned up the body parts and surgery a lot.
@@ -83,9 +83,9 @@
 // [0, 1]
 #define BLOOM_STRENGTH 0.04
 
-// How fast colors fade in and out
-// [0, 1]
-#define FADE_FACTOR 0.55
+// How fast in seconds colors fade in and out
+// x \in R : x > 0
+#define FADE_TIME 0.2
 
 
 
@@ -153,8 +153,8 @@
 #define BLOOM_STRENGTH 0.0
 #endif
 
-#ifndef FADE_FACTOR
-#define FADE_FACTOR 1.00
+#ifndef FADE_TIME
+#define FADE_TIME 0.00001
 #endif
 
 
@@ -299,6 +299,6 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
 
     // Add fade effect to smoothen out color transitions
-    // NOTE: May need to be iTime/iTimeDelta dependent
-    fragColor = vec4(FADE_FACTOR*fragColor.rgb, FADE_FACTOR);
+    float fade_factor = 1.0 - exp(-iTimeDelta/FADE_TIME * 8.0);
+    fragColor = vec4(fade_factor*fragColor.rgb, fade_factor);
 }
